@@ -39,8 +39,8 @@ The platform combines AI-assisted information extraction, multilingual interacti
 |---|---|
 | 💻 GitHub Repository | [FindBlood on GitHub](https://github.com/raziabegum705/find-blood) |
 | 🔴 Live Demo |https://raziabegum705.github.io/find-blood/ |
-| 📹 Demo Video | Add your demonstration video link |
-| 📊 Project Presentation | Add your presentation link |
+| 📹 Demo Video | https://drive.google.com/drive/folders/1fjNL3RiJTpE14g1wEt_qPtJQCHGx9BaY|
+| 📊 Project Presentation | https://drive.google.com/drive/folders/1HAwKR_lzXn6jM-F95jNQYTBlA280JfRh |
 
 ---
 
@@ -82,8 +82,6 @@ The platform combines AI-assisted information extraction, multilingual interacti
 ---
 
 ## 📸 Screenshots
-
-Add actual screenshots captured from your running application to the `screenshots/` folder.
 
 ### 🏠 Home Page
 <img width="645" height="892" alt="image" src="https://github.com/user-attachments/assets/2959438e-92ec-4642-80e2-b3784b7b9b90" />
@@ -224,9 +222,6 @@ Open the local application at:
 │ Blood Bank Locations | Request Status        │
 └──────────────────────────────────────────────┘
 ```
-
-*This diagram illustrates the high-level application flow. Actual processing and data storage depend on the implemented backend endpoints and configuration.*
-
 ---
 
 ## 🔄 How It Works
