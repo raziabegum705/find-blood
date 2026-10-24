@@ -38,7 +38,7 @@ The platform combines AI-assisted information extraction, multilingual interacti
 | Resource | Link |
 |---|---|
 | 💻 GitHub Repository | [FindBlood on GitHub](https://github.com/raziabegum705/find-blood) |
-| 🔴 Live Demo | Add your deployed application URL |
+| 🔴 Live Demo |https://raziabegum705.github.io/find-blood/ |
 | 📹 Demo Video | Add your demonstration video link |
 | 📊 Project Presentation | Add your presentation link |
 
@@ -277,6 +277,6 @@ By bringing voice input, document-based information extraction, multilingual sup
 
 **FindBlood — Helping People Find Potential Blood Assistance When It Matters.**
 
-Built with ❤️ by Team CODEX.
-
+Built with ❤️ by Team **CODEX**.
+For **innovators conclave 2026**
 </div>
