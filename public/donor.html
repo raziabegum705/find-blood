@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WhatsApp (demo)</title><meta name="theme-color" content="#075e54">
+<style>
+*{box-sizing:border-box;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{background:#d9d4cc;display:flex;justify-content:center;height:100vh;height:100dvh}
+.ph{width:100%;max-width:430px;height:100%;background:#ece5dd;display:flex;flex-direction:column;box-shadow:0 0 30px #0004}
+.hd{background:#075e54;color:#fff;display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px}
+.av{width:42px;height:42px;border-radius:50%;background:#d62828;border:2px solid #fff;display:grid;place-items:center;flex:none}
+.t{flex:1;line-height:1.2}.t b{font-size:18px}.t small{display:block;opacity:.9;font-size:12px}.vf{background:#25d366;border-radius:50%;padding:0 5px;font-size:12px}
+.ic{font-size:18px;letter-spacing:6px;cursor:pointer}
+.chat{flex:1;overflow:auto;padding:14px 12px;display:flex;flex-direction:column;gap:10px}
+.day{align-self:center;background:#e1e8ee;border-radius:10px;padding:5px 14px;font-size:13px;color:#555}
+.b{max-width:88%;background:#fff;border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:15px;line-height:1.45;box-shadow:0 1px 1px #0002;animation:in .25s;word-wrap:break-word}
+.b a{color:#0a63c9;word-break:break-all}.b .h{font-weight:800;font-size:17px;margin-bottom:6px}.b .f{font-size:12px;color:#888;margin-top:6px}.b .tm{text-align:right;font-size:11px;color:#999;margin-top:4px}
+.btns{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.btns button{border:0;border-radius:10px;padding:12px;font-size:16px;font-weight:700;cursor:pointer}
+.btns .a{background:#e1efe9;color:#0a7d5a}.btns .r{background:#f9e1e3;color:#d62828}.btns .o{background:#e3f0ff;color:#0a63c9}.btns button:disabled{opacity:.45}
+.me{align-self:flex-end;background:#d9fdd3;border-radius:16px 4px 16px 16px;padding:8px 12px;font-size:15px;box-shadow:0 1px 1px #0002;animation:in .25s}
+.inp{display:flex;gap:10px;align-items:center;padding:10px 10px calc(10px + env(safe-area-inset-bottom,0px))}.inp div{flex:1;background:#fff;border-radius:24px;padding:12px 16px;color:#888}.inp i{background:#075e54;border-radius:50%;width:44px;height:44px;display:grid;place-items:center;font-style:normal;color:#fff}
+.note{background:#fff4e5;color:#7a4a00;font-size:13px;padding:8px 12px;text-align:center}.note.hide{display:none}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+</style></head><body><div class="ph">
+<div class="hd"><div class="av"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2C12 2 5 10 5 15a7 7 0 0014 0c0-5-7-13-7-13z" fill="#fff"/></svg></div>
+<div class="t"><b>Find Blood <span class="vf">✓</span></b><small>Business Account</small></div><div class="ic" id="gear" title="Change phone number">⚙ ⋮</div></div>
+<div class="note" id="note">🔔 Tap here once to turn on the alert sound</div>
+<div class="chat" id="chat"><div class="day">Today</div></div>
+<div class="inp"><span>☺</span><div>Type a message</div><i>🎤</i></div></div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const $ = s => document.querySelector(s), chat = $('#chat');
+const esc = s => String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+const fmt = s => esc(s).replace(/\*(.+?)\*/g, '<b>$1</b>').replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+const hm = t => new Date(t).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' });
+let phone = new URLSearchParams(location.search).get('phone') || localStorage.getItem('sim_phone') || '', ac;
+function beep() { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); [880, 1175].forEach((f, i) => { const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = f; o.connect(g); g.connect(ac.destination); g.gain.setValueAtTime(.15, ac.currentTime + i * .15); g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + i * .15 + .14); o.start(ac.currentTime + i * .15); o.stop(ac.currentTime + i * .15 + .15); }); } catch {} }
+$('#note').onclick = () => { beep(); $('#note').classList.add('hide'); };
+function add(m, quiet) {
+  const b = m.body, el = document.createElement('div'); el.className = 'b'; let html = '', btns = [];
+  if (b.type === 'text') html = fmt(b.text.body);
+  else if (b.type === 'interactive') { const i = b.interactive; if (i.header && i.header.text) html += `<div class="h">${esc(i.header.text)}</div>`; html += fmt(i.body.text); if (i.footer) html += `<div class="f">${esc(i.footer.text)}</div>`; btns = (i.action && i.action.buttons) || []; }
+  else html = 'New message';
+  el.innerHTML = html + `<div class="tm">${hm(m.at)}</div>`;
+  if (btns.length) { const w = document.createElement('div'); w.className = 'btns';
+    btns.forEach(x => { const k = document.createElement('button'), t = x.reply.title; k.textContent = (/accept/i.test(t) ? '✔ ' : /reject/i.test(t) ? '✖ ' : '') + t; k.className = /accept/i.test(t) ? 'a' : /reject/i.test(t) ? 'r' : 'o';
+      k.onclick = () => { w.querySelectorAll('button').forEach(y => y.disabled = true); const me = document.createElement('div'); me.className = 'me'; me.textContent = t; chat.appendChild(me); chat.scrollTop = chat.scrollHeight;
+        fetch('/api/sim/reply', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ from: phone, id: x.reply.id }) }); };
+      w.appendChild(k); }); el.appendChild(w); }
+  chat.appendChild(el); chat.scrollTop = chat.scrollHeight;
+  if (!quiet) { beep(); navigator.vibrate && navigator.vibrate([200, 100, 200]); }
+}
+async function start() {
+  const c = await (await fetch('/api/sim/config')).json();
+  if (!c.sim) { chat.innerHTML = '<div class="note">Real WhatsApp is switched on, so this demo phone is off. Clear WA_TOKEN in .env (or leave SIM_WHATSAPP unset) to use it.</div>'; return; }
+  if (!phone) phone = c.phone; localStorage.setItem('sim_phone', phone);
+  $('.t small').textContent = 'Business Account · you are ' + phone.slice(-10);
+  const s = io(); s.on('connect', () => s.emit('sim:join', phone));
+  s.on('wa:history', a => a.forEach(m => add(m, true))); s.on('wa:message', m => add(m));
+}
+$('#gear').onclick = () => { const p = prompt('Phone number this demo phone should receive messages for (digits, e.g. 919999999999)', phone); if (p) { localStorage.setItem('sim_phone', p.replace(/\D/g, '')); location.href = location.pathname; } };
+start();
+</script></body></html>

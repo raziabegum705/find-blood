@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: find-blood
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - { key: NODE_VERSION, value: "20" }
+      - { key: MONGODB_URI, sync: false }
+      - { key: GEMINI_API_KEY, sync: false }
+      - { key: DESK_PIN, sync: false }
+      - { key: JWT_SECRET, generateValue: true }
+      - { key: CORS_ORIGIN, sync: false }
+      - { key: WA_TOKEN, sync: false }
+      - { key: WA_PHONE_ID, sync: false }
+      - { key: WA_VERIFY_TOKEN, sync: false }
+      - { key: WA_APP_SECRET, sync: false }
+      - { key: WA_TEMPLATE, value: blood_request }

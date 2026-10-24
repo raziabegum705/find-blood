@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8b1519"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Find Blood"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/icon-180.png"><link rel="icon" href="icons/icon-192.png">
+<title>Find Blood</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="phone"><div class="notch"></div>
+<div class="app">
+
+<!-- 1 HOME -->
+<section class="screen active" id="home">
+  <header class="top"><div class="logo"><span style="color:#c4161c">♥</span> Find <b>Blood</b> 📍</div>
+    <div class="top-r"><select id="lang" onchange="setLang(this.value)"><option>EN</option><option>TE</option><option>HI</option></select><button class="hb" onclick="openMenu()" aria-label="Menu">☰</button></div></header>
+  <div class="hero"><h1 data-i="hero">Need blood right now?</h1><p data-i="sub">Snap a slip or send a voice note. We'll handle the rest.</p>
+    <svg class="bag" viewBox="0 0 90 170" xmlns="http://www.w3.org/2000/svg">
+  <line x1="45" y1="0" x2="45" y2="14" stroke="#ddd" stroke-width="3"/>
+  <circle cx="45" cy="18" r="5" fill="none" stroke="#fff" stroke-width="2.5"/>
+  <rect x="8" y="26" width="74" height="100" rx="16" fill="#ffffff22" stroke="#ffffffaa" stroke-width="2"/>
+  <path d="M12 58 Q45 48 78 58 V110 Q78 122 66 122 H24 Q12 122 12 110 Z" fill="#a3121a"/>
+  <rect x="26" y="66" width="38" height="36" rx="3" fill="#f2f2f2"/>
+  <path d="M45 71 q6 8 0 12 q-6 -4 0 -12z" fill="#c4161c"/>
+  <rect x="31" y="90" width="28" height="2" fill="#bbb"/><rect x="31" y="95" width="20" height="2" fill="#bbb"/>
+  <rect x="30" y="126" width="10" height="12" rx="2" fill="#ffffffcc"/><rect x="50" y="126" width="10" height="12" rx="2" fill="#ffffffcc"/>
+  <path d="M55 138 Q55 160 80 160" fill="none" stroke="#ff9aa0" stroke-width="3"/>
+</svg><button class="btn-white" onclick="go('intake')">⚡ <span data-i="cta">Find Blood Now</span></button></div>
+  <div class="grid2">
+    <div class="card" onclick="go('register')"><div class="ic">♡</div><h3>Become a Donor</h3><small>Get matched to nearby requests</small></div>
+    <div class="card" onclick="toast('Blood camps list coming soon')"><div class="ic">◎</div><h3>Find Blood Camps</h3><small>Upcoming drives near you</small></div>
+  </div>
+  <div class="stats"><div><b>56 L</b>Registered Donors</div><div onclick="go('banks')"><b>4.7 K</b>Blood Centers</div><div><b>2.7 L</b>Camps Organized</div></div>
+  <div class="banner"><div><b>రక్తదానం చేయండి -</b><br><small>రక్తాన్ని దానం చేయడం వల్ల ప్రాణాలు కాపాడవచ్చు</small></div><span>🧑‍🤝‍🧑</span></div>
+</section>
+
+<!-- 2/3 INTAKE -->
+<section class="screen" id="intake">
+  <header class="top"><button class="back" onclick="go('home')">‹</button><b>Emergency Request</b><span></span></header>
+  <div class="tabs"><button class="on" id="tabV" onclick="tab('V')">🎙 Voice Note</button><button id="tabP" onclick="tab('P')">📷 Photo of Slip</button></div>
+  <div id="panelV" class="panel">
+    <p>Send a 5-sec voice note in Telugu / Hindi / English</p>
+    <div class="wave" id="wave"></div>
+    <button class="btn-line" id="recBtn" onclick="record()">🎙 Record voice note</button>
+    <div class="ex">e.g. "We want blood in Govt Hospital Anantapur, blood group is O positive for Rama car accident"</div>
+  </div>
+  <div id="panelP" class="panel hide">
+    <label class="drop"><input type="file" id="slip" accept="image/*" capture="environment" hidden onchange="preview(this)">
+      <span id="dropTxt">📤 Tap to upload photo of doctor's blood requisition slip</span><img id="prev" class="hide"></label>
+  </div>
+  <div id="demoGroup" class="hide"><small>Blood group needed (demo mode)</small><select class="inp" id="dGroup"><option>A+</option><option>A-</option><option selected>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+  <input class="inp" id="relPhone" placeholder="Relative's WhatsApp number (for updates)" inputmode="numeric" maxlength="13">
+  <small id="relNote" class="hide">Updates will be sent to your registered number.</small>
+  <button class="btn-red" onclick="go('triage')">Find Blood Now</button>
+</section>
+
+<!-- 4 TRIAGE -->
+<section class="screen" id="triage">
+  <header class="top"><span></span><b>AI Verification</b><span></span></header>
+  <div class="scan"><div class="doc">Requisition slip<br>Blood group: ▒▒<br>Units: ▒<br>Hospital: ▒▒▒▒▒<br>Dr. stamp / NMC: ▒▒▒▒<br>IPD ID: ▒▒▒▒</div><div class="laser"></div></div>
+  <h3 class="c">Extracting blood group, hospital details &amp; verifying with doctor's requisition</h3>
+  <ul class="steps" id="steps"><li>Reading image / voice note</li><li>Extracting blood group &amp; hospital</li><li>Verifying doctor's slip</li><li>Checking compatibility</li></ul>
+  <div class="bar"><i id="barfill"></i></div><p class="c"><b id="pct">0%</b> · This takes a few seconds. Please don't close this app.</p>
+</section>
+
+<!-- 5 VERIFIED -->
+<section class="screen" id="verified">
+  <header class="top"><span></span><b>Requisition</b><span></span></header>
+  <div class="ok">🛡 Patient verified — Zero fake request guarantee</div>
+  <div class="matrix" id="matrix"></div>
+  <button class="btn-red" onclick="go('donors')">Find Donors</button>
+  <button class="btn-line" onclick="fromRequest=true;go('banks')">View nearby blood banks</button>
+</section>
+
+<!-- 6 DONORS -->
+<section class="screen" id="donors">
+  <header class="top"><button class="back" onclick="go('verified')">‹</button><b>Nearby Donors</b><span></span></header>
+  <div class="note">🛡 Donors who gave blood in the last 90 days are excluded automatically.</div>
+  <div id="donorList"></div>
+  <button class="btn-red" onclick="broadcast()">Broadcast Verified Alert</button>
+</section>
+
+<!-- 7 WHATSAPP -->
+<section class="screen" id="whatsapp">
+  <header class="top wa"><button class="back" onclick="go('donors')">‹</button><div class="wa-av">🩸</div>
+    <div class="wa-t"><b>Find Blood <span class="vf">✔</span></b><small>Business Account</small></div><span class="wa-ic">▯ ✆ ⋮</span></header>
+  <div class="chat">
+    <div class="day">Today</div>
+    <div class="bubble">
+      <div class="bh">🩸 URGENT BLOOD REQUEST</div><p>A patient nearby needs your help.</p>
+      <div class="rows"><div><b>Blood Group:</b> <span id="waG"></span></div><div><b>Units Needed:</b> <span id="waU"></span></div><div><b>Hospital:</b> <span id="waH"></span></div><div><b>Patient:</b> <span id="waP"></span></div><div><b>Reason:</b> <span id="waR"></span></div></div>
+      <p class="q">Can you donate blood?</p><small class="tm" id="waT"></small>
+      <div class="wbtns"><button class="wbtn ok" onclick="acceptDemo()">✔ Accept</button><button class="wbtn no" onclick="rejectDemo()">✕ Reject</button></div>
+    </div>
+  </div>
+  <div class="wa-in"><span>☺</span><i>Type a message</i><span>🎤</span></div>
+</section>
+
+<!-- 8 CONFIRMED -->
+<section class="screen" id="confirmed">
+  <header class="top"><span></span><b>Donor Confirmed</b><span></span></header>
+  <div class="ok">✅ 2 units accepted by Hari</div>
+  <div class="matrix"><div><small>ETA</small><b id="eta">18:00</b></div><div><small>Units</small><b>2</b></div></div>
+  <a class="btn-line" id="dirBtn" target="_blank" rel="noopener">📍 Route to hospital blood bank</a>
+  <small id="dirName" style="color:var(--mut)"></small>
+  <button class="btn-red" onclick="go('kill')">Mark units received at hospital</button>
+</section>
+
+<!-- 10 KILL -->
+<section class="screen" id="kill">
+  <header class="top"><span></span><b>Request Completed</b><span></span></header>
+  <div class="ok big">✔ Required units confirmed at hospital</div>
+  <ul class="checks"><li>Units Received</li><li>Hospital Desk Verified</li><li>WhatsApp Pings Halted</li></ul>
+  <div class="note">🔕 Kill-switch: all emergency alerts sent to donors have been revoked to prevent spam.</div>
+  <button class="btn-red" onclick="go('home')">Back to Home</button>
+</section>
+
+<!-- 11 BANKS -->
+<section class="screen" id="banks">
+  <header class="top"><button class="back" onclick="go('home')">‹</button><b>Blood Banks</b><span></span></header>
+  <div id="map"></div>
+  <div class="pills"><button onclick="setR(25)">25 km</button><button onclick="setR(50)">50 km</button><button class="on" onclick="setR(100)">100 km</button></div>
+  <small class="cnt" id="bankNear"></small><br><small class="cnt" id="cnt"></small><div id="bankList"></div>
+</section>
+
+<!-- REGISTER DONOR -->
+<section class="screen" id="register">
+  <header class="top"><button class="back" onclick="go('home')">‹</button><b>Become a Donor</b><span></span></header>
+  <div class="note">Your number is used only to alert you about nearby blood emergencies.</div>
+  <input class="inp" id="rName" placeholder="Full name" maxlength="60">
+  <input class="inp" id="rPhone" placeholder="WhatsApp number (10 digits)" inputmode="numeric" maxlength="13">
+  <select class="inp" id="rGroup"><option value="">Blood group</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select>
+  <small>Last donated (optional)</small><input class="inp" id="rLast" type="date">
+  <button class="btn-line" id="rLocBtn" onclick="getLoc()">📍 Share my location</button>
+  <label class="chk"><input type="checkbox" id="rConsent"> I agree to receive blood request alerts on WhatsApp</label>
+  <button class="btn-red" onclick="registerDonor()">Register</button>
+</section>
+
+<!-- LOGIN -->
+<section class="screen" id="login">
+  <header class="top"><button class="back" onclick="go('home')">‹</button><b>Login</b><span></span></header>
+  <h2>Welcome back</h2><small>Login to your account</small>
+  <input class="inp" id="lPhone" placeholder="Mobile number" inputmode="numeric" maxlength="13">
+  <input class="inp" id="lPass" type="password" placeholder="Password">
+  <button class="btn-red" style="margin-top:6px" onclick="doAuth('login')">Login</button>
+  <div class="link" onclick="go('signup')">New here? Sign up</div>
+</section>
+
+<!-- SIGNUP -->
+<section class="screen" id="signup">
+  <header class="top"><button class="back" onclick="go('home')">‹</button><b>Sign up</b><span></span></header>
+  <h2>Create your account</h2>
+  <input class="inp" id="sName" placeholder="Full name" maxlength="60">
+  <input class="inp" id="sPhone" placeholder="Mobile number" inputmode="numeric" maxlength="13">
+  <input class="inp" id="sPass" type="password" placeholder="Password (min 6 characters)">
+  <button class="btn-red" style="margin-top:6px" onclick="doAuth('signup')">Create account</button>
+  <div class="link" onclick="go('login')">Already have an account? Login</div>
+</section>
+
+<!-- MENU DRAWER -->
+<div class="drawer" id="drawer" onclick="closeMenu(event)"><div class="sheet">
+  <div class="who" id="who">Welcome, guest</div>
+  <button id="mLogin" onclick="nav('login')">Login</button>
+  <button id="mSignup" onclick="nav('signup')">Sign up</button>
+  <button onclick="nav('home')">Home</button>
+  <button onclick="nav('register')">Become a Donor</button>
+  <button onclick="nav('banks')">Blood Banks</button>
+  <button id="mLogout" class="hide" onclick="logout()">Logout</button>
+</div></div>
+
+<div class="toast" id="toast"></div>
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/i18n.js"></script>
+</body></html>
