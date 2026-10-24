@@ -15,7 +15,7 @@
 
 ---
 
-## 🌍 Problem Statement
+## 🌍 Problem we found
 
 Imagine someone in your family gets into a serious road accident. You rush them to the hospital, and the doctor tells you, ‘We need blood immediately to save their life.’. The doctor hands them a prescription requesting a specific blood group, but the family does not know where to find available donors or nearby blood banks.
 
