@@ -38,7 +38,7 @@ The platform combines AI-assisted information extraction, multilingual interacti
 | Resource | Link |
 |---|---|
 | 💻 GitHub Repository | [FindBlood on GitHub](https://github.com/raziabegum705/find-blood) |
-| 🔴 Live Demo |https://raziabegum705.github.io/find-blood/ |
+| 🔴 Live Demo |https://find-blood.onrender.com/ |
 | 📹 Demo Video | https://drive.google.com/drive/folders/1fjNL3RiJTpE14g1wEt_qPtJQCHGx9BaY|
 | 📊 Project Presentation | https://drive.google.com/drive/folders/1HAwKR_lzXn6jM-F95jNQYTBlA280JfRh |
 
