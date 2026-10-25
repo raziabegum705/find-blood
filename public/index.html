@@ -31,7 +31,7 @@
 </svg><button class="btn-white" onclick="go('intake')">⚡ <span data-i="cta">Find Blood Now</span></button></div>
   <div class="grid2">
     <div class="card" onclick="go('register')"><div class="ic">♡</div><h3>Become a Donor</h3><small>Get matched to nearby requests</small></div>
-    <div class="card" onclick="toast('Blood camps list coming soon')"><div class="ic">◎</div><h3>Find Blood Camps</h3><small>Upcoming drives near you</small></div>
+    <div class="card" onclick="go('camps')"><div class="ic">◎</div><h3>Find Blood Camps</h3><small>Upcoming drives near you</small></div>
   </div>
   <div class="stats"><div><b>56 L</b>Registered Donors</div><div onclick="go('banks')"><b>4.7 K</b>Blood Centers</div><div><b>2.7 L</b>Camps Organized</div></div>
   <div class="banner"><div><b>రక్తదానం చేయండి -</b><br><small>రక్తాన్ని దానం చేయడం వల్ల ప్రాణాలు కాపాడవచ్చు</small></div><span>🧑‍🤝‍🧑</span></div>
@@ -124,8 +124,40 @@
   <div id="map"></div>
   <div class="pills"><button onclick="setR(25)">25 km</button><button onclick="setR(50)">50 km</button><button class="on" onclick="setR(100)">100 km</button></div>
   <small class="cnt" id="bankNear"></small><br><small class="cnt" id="cnt"></small><div id="bankList"></div>
+  <button class="btn-line" onclick="go('addBank')">+ Add a blood bank</button>
+</section>
+<section class="screen" id="camps">
+  <header class="top"><button class="back" onclick="go('home')">‹</button><b>Blood Camps</b><span></span></header>
+  <div id="campList"></div>
+  <button class="btn-line" onclick="go('addCamp')">+ Add a camp</button>
 </section>
 
+<section class="screen" id="addCamp">
+  <header class="top"><button class="back" onclick="go('camps')">‹</button><b>Add a camp</b><span></span></header>
+  <input class="inp" id="cName" placeholder="Camp name" maxlength="80" />
+  <input class="inp" id="cOrg" placeholder="Organized by" maxlength="80" />
+  <small>Date</small>
+  <input class="inp" id="cDate" type="date" />
+  <input class="inp" id="cTime" placeholder="Time (for example 9:00 AM - 4:00 PM)" maxlength="40" />
+  <input class="inp" id="cPlace" placeholder="Place / address" maxlength="150" />
+  <input class="inp" id="cPhone" placeholder="Phone (optional)" inputmode="numeric" maxlength="15" />
+  <button class="btn-red" onclick="saveCamp()">Save camp</button>
+</section>
+
+<section class="screen" id="addBank">
+  <header class="top"><button class="back" onclick="go('banks')">‹</button><b>Add a blood bank</b><span></span></header>
+  <input class="inp" id="bName" placeholder="Blood bank name" maxlength="100" />
+  <select class="inp" id="bType"><option>Government</option><option>Private</option><option>Charitable/Vol</option></select>
+  <input class="inp" id="bPhone" placeholder="Phone (optional)" inputmode="numeric" maxlength="15" />
+  <input class="inp" id="bUnits" type="number" min="0" placeholder="Units available (optional)" />
+  <button class="btn-line" id="bLocBtn" onclick="useMyLocation()">📍 Use my current location</button>
+  <div style="display: flex; gap: 8px">
+    <input class="inp" id="bLat" placeholder="Latitude" inputmode="decimal" />
+    <input class="inp" id="bLng" placeholder="Longitude" inputmode="decimal" />
+  </div>
+  <small>Tip: in Google Maps, right-click the place and tap the coordinates to copy them.</small>
+  <button class="btn-red" onclick="saveBank()">Save blood bank</button>
+</section>
 <!-- REGISTER DONOR -->
 <section class="screen" id="register">
   <header class="top"><button class="back" onclick="go('home')">‹</button><b>Become a Donor</b><span></span></header>
@@ -168,6 +200,8 @@
   <button onclick="nav('home')">Home</button>
   <button onclick="nav('register')">Become a Donor</button>
   <button onclick="nav('banks')">Blood Banks</button>
+  <button onclick="nav('camps')">Find Blood Camps</button>
+<button onclick="nav('addBank')">Add a blood bank</button>
   <button id="mLogout" class="hide" onclick="logout()">Logout</button>
 </div></div>
 
@@ -181,4 +215,5 @@
 <script src="js/api.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/i18n.js"></script>
+<script src="js/extra.js"></script>
 </body></html>

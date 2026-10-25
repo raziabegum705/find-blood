@@ -22,6 +22,7 @@ const limiter = max => { const m = new Map(); return (req, res, next) => { const
 
 // 1) Slip photo or voice note -> Gemini -> verified request
 auth.mount(app, limiter, wrap);
+require('./camps').mount(app, limiter, wrap);
 app.post('/api/triage', limiter(30), upload.single('file'), wrap(async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'file required' });
   const d = await extract(req.file.buffer, req.file.mimetype);

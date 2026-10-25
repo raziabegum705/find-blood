@@ -11,4 +11,11 @@ const EmergencyRequest = m.model('EmergencyRequest', new m.Schema({
 const AuditLog = m.model('AuditLog', new m.Schema({ request: m.Types.ObjectId, event: String, meta: Object }, { timestamps: true }));
 const Onboarding = m.model('Onboarding', new m.Schema({ phone: { type: String, unique: true }, step: String, bloodGroup: String, recent: Boolean, createdAt: { type: Date, default: Date.now, expires: 86400 } }));
 const User = m.model('User', new m.Schema({ name: String, phone: { type: String, unique: true }, salt: String, hash: String }, { timestamps: true }));
+const Camp = m.model(
+  'Camp',
+  new m.Schema(
+    { name: String, organizer: String, date: String, time: String, place: String, phone: String },
+    { timestamps: true },
+  ),
+);
 module.exports = { User, BloodBank, Donor, EmergencyRequest, AuditLog, Onboarding };
